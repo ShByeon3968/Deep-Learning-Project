@@ -1,1 +1,1 @@
-# Network-Resource
+# Paper Implementation
