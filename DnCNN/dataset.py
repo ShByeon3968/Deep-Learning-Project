@@ -137,6 +137,9 @@ class DnCnnDataset(object):
         crop_x = random.randint(0, clean_image.width - self.patch_size)
         crop_y = random.randint(0, clean_image.height - self.patch_size)
         clean_image = clean_image.crop((crop_x, crop_y, crop_x + self.patch_size, crop_y + self.patch_size))
+        
+        # 데이터 증강
+        clean_image = self._apply_transform(clean_image)
 
         noisy_image = clean_image.copy()
         gaussian_noise = np.zeros((clean_image.height, clean_image.width, 3), dtype=np.float32)
@@ -187,6 +190,16 @@ class DnCnnDataset(object):
     def __len__(self):
         return len(self.image_files)
     
+    def _apply_transform(self,image:Image) -> Image:
+        if random.random() < 0.5:
+            image = TF.hflip(image)
+        if random.random() < 0.5:
+            image = TF.vflip(image)
+        if random.random() < 0.5:
+            angle = random.choice([90, 180, 270])
+            image = TF.rotate(image, angle)
+        return image
+        
 
 def get_train_loader(path:str='./data/images/train',batch_size:int=32):
     dataset = DnCnnDataset(path,

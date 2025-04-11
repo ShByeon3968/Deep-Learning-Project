@@ -9,4 +9,4 @@ class SumSquaredError():
         super(SumSquaredError, self).__init__()
 
     def __call__(self, input, target):
-        return F.mse_loss(input, target, reduction='sum') * 0.5
+        return F.mse_loss(input, target, reduction='mean') * 0.5

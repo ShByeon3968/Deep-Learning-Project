@@ -12,7 +12,7 @@ if __name__ == '__main__':
     cuda = torch.cuda.is_available()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     sigma = 25
-    epoch = 180
+    epoch = 5
 
     print("모델 구성")
     model = DnCNN()
@@ -42,7 +42,7 @@ if __name__ == '__main__':
             running_loss += loss.item() * noisy.size(0)
         
         epoch_loss = running_loss / len(train_loader.dataset)
-        print(f"Epoch [{epoch+1}/{epoch}] - Training Loss: {epoch_loss:.4f}")
+        print(f"Epoch [{ep+1}/{epoch}] - Training Loss: {epoch_loss:.4f}")
 
         # 검증 루프
         model.eval()
@@ -56,7 +56,7 @@ if __name__ == '__main__':
         val_loss /= len(val_loader.dataset)
         print(f"Validation Loss: {val_loss:.4f}")
 
-        # show_denoising_result(model,val_loader)
+        show_denoising_result(model,val_loader)
 
 # 모델 저장
 torch.save(model.state_dict(), 'dncnn.pth')
