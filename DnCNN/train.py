@@ -5,6 +5,7 @@ from loss import SumSquaredError
 import torch.optim as optim
 from torch.optim.lr_scheduler import MultiStepLR
 from tqdm import tqdm
+from utils import show_denoising_result
 
 
 if __name__ == '__main__':
@@ -47,13 +48,15 @@ if __name__ == '__main__':
         model.eval()
         val_loss = 0.0
         with torch.no_grad():
-            for noisy, clean in val_loader:
+            for noisy, clean in tqdm(val_loader):
                 noisy, clean = noisy.to(device), clean.to(device)
                 output = model(noisy)
                 loss = criterion(output, clean)
                 val_loss += loss.item() * noisy.size(0)
         val_loss /= len(val_loader.dataset)
         print(f"Validation Loss: {val_loss:.4f}")
+
+        # show_denoising_result(model,val_loader)
 
 # 모델 저장
 torch.save(model.state_dict(), 'dncnn.pth')
